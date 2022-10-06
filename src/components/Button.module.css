@@ -2,3 +2,10 @@
   /* background: #ff55ff; */
   background: #5555ff;
 }
+
+.buttonWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding-bottom: 1rem;
+}

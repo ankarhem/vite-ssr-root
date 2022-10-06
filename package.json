@@ -6,9 +6,10 @@
   "scripts": {
     "start": "NODE_ENV=production node -r dotenv/config ./dist/server.js",
     "dev": "nodemon",
-    "build": "pnpm build:client && pnpm build:server",
+    "build": "pnpm build:server && pnpm build:client && pnpm build:serverEntry",
     "build:client": "tsc && vite build --outDir dist/client",
-    "build:server": "tsc --project ./tsconfig.node.json --outDir ./dist && vite build --outDir dist/server --ssr ./src/entry-server.tsx",
+    "build:serverEntry": "vite build --outDir dist/server --ssr ./src/entry-server.tsx",
+    "build:server": "tsc --project ./tsconfig.node.json --outDir ./dist",
     "preview": "vite preview"
   },
   "dependencies": {

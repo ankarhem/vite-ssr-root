@@ -5,5 +5,5 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["server.ts"]
+  "include": ["server.ts", "src/server-types.d.ts"]
 }
