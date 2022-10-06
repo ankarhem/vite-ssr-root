@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { createRoutesFromElements, Outlet, Route } from "react-router-dom";
 import { notFound, RootBoundary } from "./components/CustomError";
 
@@ -8,8 +8,22 @@ const About = React.lazy(() => import("./pages/about"));
 export const routes = createRoutesFromElements(
   <>
     <Route element={<Outlet />} errorElement={<RootBoundary />}>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={"Loading home..."}>
+            <Home />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <Suspense fallback={"Loading about..."}>
+            <About />
+          </Suspense>
+        }
+      />
       <Route
         path="*"
         loader={() => {

@@ -7,9 +7,5 @@ interface SharedTreeProps {
 }
 
 export function SharedTree({ children }: SharedTreeProps) {
-  return (
-    <React.StrictMode>
-      <Suspense fallback={"Loading..."}>{children}</Suspense>
-    </React.StrictMode>
-  );
+  return <React.StrictMode>{children}</React.StrictMode>;
 }
