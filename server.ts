@@ -8,6 +8,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function createServer() {
+  console.log("isDevelopment", isDevelopment);
   const app = express();
 
   // Create Vite server in middleware mode and configure the app type as
@@ -21,14 +22,15 @@ async function createServer() {
   // use vite's connect instance as middleware
   // if you use your own express router (express.Router()), you should use router.use
   app.use(vite.middlewares);
-  app.use("/assets", express.static(path.join(__dirname, "assets")));
+  app.use("/assets", express.static(path.join(__dirname, "./client/assets")));
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
       // 1. Read index.html
+      const htmlPath = isDevelopment ? "index.html" : "client/index.html";
       let template = fs.readFileSync(
-        path.resolve(__dirname, "index.html"),
+        path.resolve(__dirname, htmlPath),
         "utf-8"
       );
 
@@ -40,11 +42,10 @@ async function createServer() {
       // 3. Load the server entry. vite.ssrLoadModule automatically transforms
       //    your ESM source code to be usable in Node.js! There is no bundling
       //    required, and provides efficient invalidation similar to HMR.
-      const HASH = process.env.COMMIT_HASH || "";
-      const entry = isDevelopment
-        ? "/src/entry-server.tsx"
-        : `/assets/${HASH}/index.js`;
-      const { render } = await vite.ssrLoadModule(entry);
+
+      const { render } = isDevelopment
+        ? await vite.ssrLoadModule("./src/entry-server.tsx")
+        : await import(`./server/entry-server.js` as any);
 
       // 4. render the app HTML. This assumes entry-server.js's exported `render`
       //    function calls appropriate framework SSR APIs,

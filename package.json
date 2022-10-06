@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "NODE_ENV=production node -r dotenv/config ./dist/server.js",
     "dev": "nodemon",
     "build": "pnpm build:client && pnpm build:server",
-    "build:client": "tsc && vite build",
-    "build:server": "tsc --project ./tsconfig.node.json --outDir ./dist",
+    "build:client": "tsc && vite build --outDir dist/client",
+    "build:server": "tsc --project ./tsconfig.node.json --outDir ./dist && vite build --outDir dist/server --ssr ./src/entry-server.tsx",
     "preview": "vite preview"
   },
   "dependencies": {
