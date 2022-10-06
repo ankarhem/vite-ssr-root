@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { CatFact } from ".";
 import { useQuery } from "@tanstack/react-query";
 
-function CatFactPage() {
+const CatFactComponent = () => {
   const query = useQuery<CatFact>(
     ["catfact-not-ssr-cached"],
     async () =>
@@ -18,7 +18,6 @@ function CatFactPage() {
 
   return (
     <>
-      <div style={{ paddingBottom: "1rem" }}>SSR'd Cat fact (1000ms)</div>
       <button
         onClick={() => query.refetch()}
         disabled={query.fetchStatus === "fetching"}
@@ -30,6 +29,17 @@ function CatFactPage() {
       {query.fetchStatus === "idle" && query.data ? (
         <div style={{ maxWidth: "50ch" }}>{query.data.fact}</div>
       ) : null}
+    </>
+  );
+};
+
+function CatFactPage() {
+  return (
+    <>
+      <div style={{ paddingBottom: "1rem" }}>SSR'd Cat fact (1000ms)</div>
+      <Suspense fallback={"Suspense inside the catfact page"}>
+        <CatFactComponent />
+      </Suspense>
     </>
   );
 }

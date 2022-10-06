@@ -28,6 +28,7 @@ function Home() {
       </div>
       <button
         onClick={() => query.refetch()}
+        // This is disabled from SSR, investigate
         disabled={query.fetchStatus === "fetching"}
       >
         Refetch
