@@ -15,7 +15,6 @@ specifiers:
   tsconfig-paths: ^4.1.0
   typescript: ^4.6.4
   vite: ^3.1.0
-  vite-plugin-live-reload: ^3.0.1
 
 dependencies:
   dotenv: 16.0.3
@@ -34,7 +33,6 @@ devDependencies:
   tsconfig-paths: 4.1.0
   typescript: 4.8.4
   vite: 3.1.4
-  vite-plugin-live-reload: 3.0.1
 
 packages:
 
@@ -1633,13 +1631,6 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
     dev: false
-
-  /vite-plugin-live-reload/3.0.1:
-    resolution: {integrity: sha512-ERZTRHnU50R7nRfKVMCNrkSyXIcxKv87INWmPPmnOF3fcaOKFbLQ5zdO6hfPb6bl03fmENtMByfz0OiEAsFF+g==}
-    dependencies:
-      chokidar: 3.5.3
-      picocolors: 1.0.0
-    dev: true
 
   /vite/3.1.4:
     resolution: {integrity: sha512-JoQI08aBjY9lycL7jcEq4p9o1xUjq5aRvdH4KWaXtkSx7e7RpAh9D3IjzDWRD4Fg44LS3oDAIOG/Kq1L+82psA==}

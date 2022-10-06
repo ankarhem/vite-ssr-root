@@ -10,7 +10,7 @@ function Button() {
       className={classes.button}
       onClick={() => setCount((count) => count + 1)}
     >
-      scount is {count}
+      count is {count}
     </button>
   );
 }

@@ -4,17 +4,17 @@ import { fileURLToPath } from "url";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 
-const isDevelopment = process.env.NODE_ENV !== "production";
+const isDevelopment = process.env.NODE_ENV === "development";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function createServer() {
-  console.log("isDevelopment", isDevelopment);
   const app = express();
 
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
   const vite = await createViteServer({
+    mode: process.env.NODE_ENV,
     server: { middlewareMode: true },
     appType: "custom",
   });
@@ -54,6 +54,8 @@ async function createServer() {
 
       // 5. Inject the app-rendered HTML into the template.
       const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+
+      console.log(template, "\n", html);
 
       // 6. Send the rendered HTML back.
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
