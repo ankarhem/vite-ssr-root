@@ -1,10 +1,13 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { SharedTree } from "./App";
+import { routes } from "./Routes";
+
+const router = createBrowserRouter(routes);
 
 ReactDOM.hydrateRoot(
   document.querySelector("#root")!,
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <SharedTree>
+    <RouterProvider router={router} />
+  </SharedTree>
 );
