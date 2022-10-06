@@ -9,10 +9,17 @@ import {
 import { unstable_createStaticHandler as createStaticHandler } from "@remix-run/router";
 import type * as express from "express";
 import { routes } from "./Routes";
+import {
+  dehydrate,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 const ABORT_TIMEOUT = 5000;
 
 export const render: ServerRenderFunction = async ({ req, res, template }) => {
+  /** React router */
   let { query } = createStaticHandler(routes);
   let remixRequest = createFetchRequest(req);
   let context = await query(remixRequest);
@@ -22,6 +29,16 @@ export const render: ServerRenderFunction = async ({ req, res, template }) => {
   }
   let router = createStaticRouter(routes, context);
 
+  /** Tanstack query */
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(
+    ["catfact"],
+    async () =>
+      await fetch("https://catfact.ninja/fact").then((res) => res.json())
+  );
+  const dehydratedState = dehydrate(queryClient);
+
+  /** React streaming */
   let didError = false;
   const [start, end] = template.split("<!--ssr-outlet-->");
 
@@ -30,17 +47,25 @@ export const render: ServerRenderFunction = async ({ req, res, template }) => {
       res.write(chunk, cb);
     },
     final() {
-      res.end(end);
+      const tackstackScriptTag = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
+        dehydratedState
+      )};</script>`;
+      res.end(end.replace("<!--tanstack-query-->", tackstackScriptTag));
+      queryClient.clear();
     },
   });
 
   const { abort, pipe } = renderToPipeableStream(
     <SharedTree>
-      <StaticRouterProvider
-        router={router}
-        context={context}
-        nonce="some-generated-nonce"
-      />
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={dehydratedState}>
+          <StaticRouterProvider
+            router={router}
+            context={context}
+            nonce="some-generated-nonce"
+          />
+        </Hydrate>
+      </QueryClientProvider>
     </SharedTree>,
     {
       onShellReady() {

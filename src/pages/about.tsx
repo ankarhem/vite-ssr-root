@@ -10,8 +10,8 @@ const LazyButton = React.lazy(() => {
 function About() {
   return (
     <>
-      <div>About</div>
-      <Link to="/">Go to Home</Link>
+      <h2>About</h2>
+      <div>Lazy loading components</div>
       <Button label={"Normal Button"} />
       <Suspense fallback={<div>Loading button...</div>}>
         <LazyButton label={"Lazy Button (3000ms)"} />

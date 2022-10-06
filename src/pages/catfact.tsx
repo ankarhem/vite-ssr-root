@@ -1,44 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { CatFact } from ".";
 import { useQuery } from "@tanstack/react-query";
 
-export type CatFact = {
-  fact: string;
-  length: string;
-};
-
-function Home() {
+function CatFactPage() {
   const query = useQuery<CatFact>(
-    ["catfact"],
+    ["catfact-not-ssr-cached"],
     async () =>
       new Promise((resolve) => {
         setTimeout(() => {
           resolve(
             fetch("https://catfact.ninja/fact").then((res) => res.json())
           );
-        }, 500);
-      }) as any
+        }, 1000);
+      }) as any,
+    { suspense: true }
   );
 
   return (
     <>
-      <h2>Home</h2>
-      <div style={{ paddingBottom: "1rem" }}>
-        SSR'd Cat fact (stale while refetching)
-      </div>
+      <div style={{ paddingBottom: "1rem" }}>SSR'd Cat fact (1000ms)</div>
       <button
         onClick={() => query.refetch()}
         disabled={query.fetchStatus === "fetching"}
       >
-        Refetch
+        {query.fetchStatus === "fetching" ? "Fetching..." : "Refetch"}
       </button>
-      {query.isLoading ? <div>Loading cat fact...</div> : null}
+      {query.fetchStatus === "fetching" ? <div>Loading cat fact...</div> : null}
       {query.isError ? <div>Error loading cat fact</div> : null}
-      {query.data ? (
+      {query.fetchStatus === "idle" && query.data ? (
         <div style={{ maxWidth: "50ch" }}>{query.data.fact}</div>
       ) : null}
     </>
   );
 }
 
-export default Home;
+export default CatFactPage;
